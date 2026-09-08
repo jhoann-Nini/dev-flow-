@@ -1,0 +1,28 @@
+#!/bin/bash
+
+DEV_FLOW_DIR="$HOME/proyectos/dev-flow-"
+
+case "$1" in
+
+    doctor)
+        "$DEV_FLOW_DIR/scripts/doctor.sh"
+        ;;
+
+    ports)
+        "$DEV_FLOW_DIR/scripts/check-ports.sh"
+        ;;
+
+    detect)
+        "$DEV_FLOW_DIR/scripts/detect-project.sh"
+        ;;
+
+    *)
+        echo "DEV-FLOW"
+        echo ""
+        echo "Uso:"
+        echo "  dev doctor    Diagnostica el entorno"
+        echo "  dev ports     Revisa los puertos"
+        echo "  dev detect    Detecta el tipo de proyecto"
+        ;;
+
+esac
