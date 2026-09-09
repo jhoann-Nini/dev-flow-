@@ -17,7 +17,12 @@ for PORT in "${PORTS[@]}"; do
         PROCESS=$(lsof -i :"$PORT" -sTCP:LISTEN 2>/dev/null | tail -n +2 | awk '{print $1}' | head -n 1)
 
         if [ -n "$PROCESS" ]; then
-            echo "   └─ Proceso: $PROCESS"
+         echo "   └─ Proceso: $PROCESS"
+        fi
+
+        if [ "$PORT" -eq 5432 ]; then
+            echo "   └─ Posible servicio: PostgreSQL"
+            echo "   └─ Diagnóstico: sudo systemctl status postgresql"
         fi
 
         OCCUPIED=$((OCCUPIED + 1))
