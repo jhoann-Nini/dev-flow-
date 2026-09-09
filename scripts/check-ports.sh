@@ -5,6 +5,8 @@ echo "       DEV-FLOW - PORT CHECK"
 echo "======================================"
 echo ""
 
+OCCUPIED=0
+
 PORTS=(3000 5432 8080 8081 5173)
 
 for PORT in "${PORTS[@]}"; do
@@ -17,6 +19,8 @@ for PORT in "${PORTS[@]}"; do
         if [ -n "$PROCESS" ]; then
             echo "   └─ Proceso: $PROCESS"
         fi
+
+        OCCUPIED=$((OCCUPIED + 1))
     else
         echo "✅ Puerto $PORT: LIBRE"
     fi
@@ -27,3 +31,5 @@ echo ""
 echo "======================================"
 echo "          VERIFICACIÓN TERMINADA"
 echo "======================================"
+
+exit "$OCCUPIED"
