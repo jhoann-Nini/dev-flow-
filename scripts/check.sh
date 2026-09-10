@@ -176,8 +176,8 @@ if [ "$PROJECT_TYPE" = "nextjs" ] || [ "$PROJECT_TYPE" = "nodejs" ]; then
 
     if node -e "const p=require('./package.json'); process.exit(p.scripts?.build ? 0 : 1)" 2>/dev/null; then
 
-        if npm run build; then
-            ok "Build: correcto"
+        if "$HOME/proyectos/dev-flow-/scripts/check-build.sh"; then
+            :
         else
             error "Build: falló"
         fi
