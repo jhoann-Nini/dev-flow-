@@ -113,8 +113,8 @@ if [ "$PROJECT_TYPE" = "nextjs" ] || [ "$PROJECT_TYPE" = "nodejs" ]; then
 
     if [ -f "tsconfig.json" ]; then
         ok "tsconfig.json encontrado"
-
-        if npx tsc --noEmit --pretty false; then
+        
+        if "$HOME/proyectos/dev-flow-/scripts/check-typescript.sh"; then
             ok "TypeScript: sin errores"
         else
             error "TypeScript: se encontraron errores"
