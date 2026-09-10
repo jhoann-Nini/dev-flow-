@@ -63,6 +63,12 @@ if command -v docker &> /dev/null; then
         echo "✅ Docker Engine: FUNCIONANDO"
     else
         echo "⚠️  Docker Engine: NO RESPONDE"
+
+        ERROR_ID=$("$HOME/proyectos/dev-flow-/scripts/error-map.sh" "docker")
+
+        echo "   └─ Error relacionado: $ERROR_ID"
+        echo "   └─ Solución: dev error docker"
+
         ERRORS=$((ERRORS + 1))
     fi
 fi
