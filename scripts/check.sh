@@ -155,8 +155,8 @@ if [ "$PROJECT_TYPE" = "nextjs" ] || [ "$PROJECT_TYPE" = "nodejs" ]; then
 
     if node -e "const p=require('./package.json'); process.exit(p.scripts?.test ? 0 : 1)" 2>/dev/null; then
 
-        if npm run test -- --run; then
-            ok "Tests: todos pasan"
+        if "$HOME/proyectos/dev-flow-/scripts/check-tests.sh"; then
+            :
         else
             error "Tests: se encontraron fallos"
         fi
