@@ -21,8 +21,8 @@ for PORT in "${PORTS[@]}"; do
         fi
 
         if [ "$PORT" -eq 5432 ]; then
-            echo "   └─ Posible servicio: PostgreSQL"
-            echo "   └─ Diagnóstico: sudo systemctl status postgresql"
+            echo "   └─ Error relacionado: ERROR-001"
+            echo "   └─ Solución: dev error ports"
         fi
 
         OCCUPIED=$((OCCUPIED + 1))
