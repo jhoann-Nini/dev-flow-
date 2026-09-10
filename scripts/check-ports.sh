@@ -21,7 +21,10 @@ for PORT in "${PORTS[@]}"; do
         fi
 
         if [ "$PORT" -eq 5432 ]; then
-            echo "   └─ Error relacionado: ERROR-001"
+            echo "   └─ Posible servicio: PostgreSQL"
+            echo "   └─ Diagnóstico: sudo systemctl status postgresql"
+            ERROR_ID=$("$HOME/proyectos/dev-flow-/scripts/error-map.sh" "ports")
+            echo "   └─ Error relacionado: $ERROR_ID"
             echo "   └─ Solución: dev error ports"
         fi
 
