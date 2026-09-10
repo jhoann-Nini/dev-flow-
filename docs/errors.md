@@ -12,6 +12,9 @@ automáticamente.
 
 ## ERROR-001 - Puerto ocupado
 
+**ID:** ERROR-001
+**Categoría:** ports
+
 ### Problema
 
 Un puerto necesario para ejecutar un proyecto ya está siendo utilizado
@@ -40,6 +43,9 @@ detenerse o si el proyecto debe utilizar otro puerto.
 ---
 
 ## ERROR-002 - PostgreSQL local entra en conflicto con Docker
+
+**ID:** ERROR-002
+**Categoría:** docker
 
 ### Problema
 
@@ -79,6 +85,9 @@ Contenedor PostgreSQL intentando utilizar 5432.
 
 ## ERROR-003 - GitHub rechaza autenticación mediante contraseña
 
+**ID:** ERROR-003
+**Categoría:** git
+
 ### Problema
 
 GitHub no permite utilizar la contraseña normal de la cuenta para
@@ -113,6 +122,9 @@ y advertir si GitHub CLI no está autenticado.
 
 ## ERROR-004 - TypeScript encuentra errores antes del build
 
+**ID:** ERROR-004
+**Categoría:** typescript
+
 ### Problema
 El proyecto contiene errores de tipos que pueden impedir una
 compilación correcta.
@@ -132,6 +144,9 @@ Si encuentra errores, los reporta como errores del proyecto.
 ---
 
 ## ERROR-005 - ESLint encuentra problemas en el código
+
+**ID:** ERROR-005
+**Categoría:** eslint
 
 ### Problema
 El código contiene errores o advertencias detectadas por ESLint.
@@ -154,6 +169,9 @@ calidad o integración del proyecto.
 
 ## ERROR-006 - Tests fallan
 
+**ID:** ERROR-006
+**Categoría:** tests
+
 ### Problema
 Uno o más tests automatizados no pasan.
 
@@ -174,6 +192,9 @@ Un test fallido se reporta como error.
 
 ## ERROR-007 - Build falla
 
+**ID:** ERROR-007
+**Categoría:** build
+
 ### Problema
 El proyecto no puede generar correctamente su versión de producción.
 
@@ -193,6 +214,9 @@ Un build fallido se reporta como error.
 ---
 
 ## ERROR-008 - Dependencias no instaladas
+
+**ID:** ERROR-008
+**Categoría:** dependencies
 
 ### Problema
 El proyecto contiene package.json, pero no existe node_modules.
@@ -215,6 +239,9 @@ dev check
 ---
 
 ## ERROR-009 - Variables de entorno ausentes
+
+**ID:** ERROR-009
+**Categoría:** environment
 
 ### Problema
 

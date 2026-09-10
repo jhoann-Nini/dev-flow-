@@ -11,12 +11,17 @@ case "$1" in
     ports)
         "$DEV_FLOW_DIR/scripts/check-ports.sh"
         ;;
+
     check)
         "$DEV_FLOW_DIR/scripts/check.sh"
         ;;
 
     detect)
         "$DEV_FLOW_DIR/scripts/detect-project.sh"
+        ;;
+
+    error)
+        "$DEV_FLOW_DIR/scripts/find-error.sh" "$2"
         ;;
 
     *)
@@ -27,6 +32,8 @@ case "$1" in
         echo "  dev ports     Revisa los puertos"
         echo "  dev check     Revisa el proyecto actual"
         echo "  dev detect    Detecta el tipo de proyecto"
+        echo "  dev error     Busca errores en la base de conocimiento"
+        echo ""
         ;;
 
 esac
