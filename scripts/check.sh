@@ -134,36 +134,11 @@ if [ "$PROJECT_TYPE" = "nextjs" ] || [ "$PROJECT_TYPE" = "nodejs" ]; then
 
     if node -e "const p=require('./package.json'); process.exit(p.scripts?.lint ? 0 : 1)" 2>/dev/null; then
 
-        LINT_OUTPUT=$(mktemp)
-
-        npm run lint -- --no-warn-ignored > "$LINT_OUTPUT" 2>&1
-        LINT_EXIT=$?
-
-        cat "$LINT_OUTPUT"
-
-        LINT_SUMMARY=$(grep -E '✖ [0-9]+ problem' "$LINT_OUTPUT" | tail -n 1)
-
-        LINT_ERRORS=0
-        LINT_WARNINGS=0
-
-        if [ -n "$LINT_SUMMARY" ]; then
-            LINT_ERRORS=$(echo "$LINT_SUMMARY" | sed -E 's/.*\(([0-9]+) errors?.*/\1/')
-            LINT_WARNINGS=$(echo "$LINT_SUMMARY" | sed -E 's/.*,[[:space:]]*([0-9]+) warnings?\).*/\1/')
+        if "$HOME/proyectos/dev-flow-/scripts/check-eslint.sh"; then
+            :
+        else
+            error "ESLint: se encontraron problemas"
         fi
-
-        if [ "$LINT_ERRORS" -gt 0 ]; then
-            error "ESLint: $LINT_ERRORS error(es)"
-        fi
-
-        if [ "$LINT_WARNINGS" -gt 0 ]; then
-            warning "ESLint: $LINT_WARNINGS warning(s)"
-        fi
-
-        if [ "$LINT_ERRORS" -eq 0 ] && [ "$LINT_WARNINGS" -eq 0 ]; then
-            ok "ESLint: sin problemas"
-        fi
-
-        rm -f "$LINT_OUTPUT"
 
     else
         warning "No existe script 'lint' en package.json"
