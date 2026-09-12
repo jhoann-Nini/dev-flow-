@@ -133,6 +133,42 @@ if [ "$PROJECT_TYPE" -eq 1 ]; then
 fi
 
 if [ "$PROJECT_TYPE" -eq 1 ]; then
+    if cp "$DEV_FLOW_DIR/templates/nextjs/next.config.ts" "$PROJECT_DIR/next.config.ts"; then
+        echo "✓ configuración Next.js creada"
+    else
+        echo "❌ No se pudo crear configuración Next.js"
+        exit 1
+    fi
+fi
+
+if [ "$PROJECT_TYPE" -eq 1 ]; then
+    if cp "$DEV_FLOW_DIR/templates/nextjs/docker/Dockerfile" "$PROJECT_DIR/Dockerfile"; then
+        echo "✓ Dockerfile creado"
+    else
+        echo "❌ No se pudo crear Dockerfile"
+        exit 1
+    fi
+
+    if cp "$DEV_FLOW_DIR/templates/nextjs/docker/.dockerignore" "$PROJECT_DIR/.dockerignore"; then
+        echo "✓ .dockerignore creado"
+    else
+        echo "❌ No se pudo crear .dockerignore"
+        exit 1
+    fi
+fi
+
+if [ "$PROJECT_TYPE" -eq 1 ]; then
+    mkdir -p "$PROJECT_DIR/.github/workflows"
+
+    if cp "$DEV_FLOW_DIR/templates/nextjs/github/workflows/ci.yml" "$PROJECT_DIR/.github/workflows/ci.yml"; then
+        echo "✓ GitHub Actions configurado"
+    else
+        echo "❌ No se pudo crear workflow de GitHub Actions"
+        exit 1
+    fi
+fi
+
+if [ "$PROJECT_TYPE" -eq 1 ]; then
     if cp "$DEV_FLOW_DIR/templates/common/.prettierrc" "$PROJECT_DIR/.prettierrc"; then
         echo "✓ Prettier configurado"
     else
