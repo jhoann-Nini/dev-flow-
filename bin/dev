@@ -23,6 +23,10 @@ case "$1" in
     error)
         "$DEV_FLOW_DIR/scripts/find-error.sh" "$2"
         ;;
+    
+    new)
+        "$DEV_FLOW_DIR/scripts/new/new-project.sh"
+        ;;
 
     *)
         echo "DEV-FLOW"
@@ -33,6 +37,7 @@ case "$1" in
         echo "  dev check     Revisa el proyecto actual"
         echo "  dev detect    Detecta el tipo de proyecto"
         echo "  dev error     Busca errores en la base de conocimiento"
+        echo "  dev new       Crea un nuevo proyecto"
         echo ""
         ;;
 
