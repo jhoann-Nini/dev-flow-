@@ -215,3 +215,21 @@ else
     echo "❌ No se pudo crear el commit inicial"
     exit 1
 fi
+
+echo ""
+echo "======================================"
+echo "   PROYECTO CREADO CORRECTAMENTE"
+echo "======================================"
+echo ""
+echo "Proyecto: $PROJECT_NAME"
+echo "Tipo:     $TYPE_NAME"
+echo "Ubicación:"
+echo "  $PROJECT_DIR"
+echo ""
+echo "Siguiente paso:"
+echo ""
+echo "  cd $PROJECT_DIR"
+echo "  dev doctor"
+echo "  dev check"
+echo ""
+echo "======================================"
