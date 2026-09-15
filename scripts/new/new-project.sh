@@ -95,6 +95,15 @@ if [ "$PROJECT_TYPE" -eq 1 ]; then
     fi
 fi
 
+if [ "$PROJECT_TYPE" -eq 2 ]; then
+    if "$DEV_FLOW_DIR/scripts/new/create-springboot.sh" "$PROJECT_DIR"; then
+        echo "✓ Spring Boot creado"
+    else
+        echo "❌ Error creando proyecto Spring Boot"
+        exit 1
+    fi
+fi
+
 if cp "$DEV_FLOW_DIR/templates/common/.gitignore" "$PROJECT_DIR/.gitignore"; then
     echo "✓ .gitignore creado"
 else

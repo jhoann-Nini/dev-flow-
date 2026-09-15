@@ -32,3 +32,6 @@ coverage/
 # Archivos temporales
 *.tmp
 *.temp
+
+# Maven / Spring Boot
+target/
