@@ -147,6 +147,14 @@ echo "  $PROJECT_DIR"
 
 cd "$PROJECT_DIR" || exit 1
 
+# Verificar que no existan repositorios Git anidados
+if find "$PROJECT_DIR" -type d -name ".git" -print -quit | grep -q .; then
+    echo ""
+    echo "❌ Se encontró un repositorio Git dentro del proyecto."
+    echo "   No se continuará para evitar repositorios Git anidados."
+    exit 1
+fi
+
 git init
 
 git branch -m main
@@ -283,6 +291,18 @@ if [ "$PROJECT_TYPE" -eq 1 ]; then
 fi
 
 echo ""
+
+# Verificar repositorios Git anidados antes del commit
+NESTED_GIT=$(find "$PROJECT_DIR" -mindepth 2 -type d -name ".git" -print)
+
+if [ -n "$NESTED_GIT" ]; then
+    echo ""
+    echo "❌ Se encontraron repositorios Git anidados:"
+    echo "$NESTED_GIT"
+    echo ""
+    echo "No se creará el commit inicial."
+    exit 1
+fi
 
 git add .
 
