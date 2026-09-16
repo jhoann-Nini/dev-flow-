@@ -62,7 +62,75 @@ echo ""
 echo "======================================"
 
 PROJECTS_DIR="$HOME/proyectos"
-PROJECT_DIR="$PROJECTS_DIR/$PROJECT_NAME"
+BASE_DIR="$PROJECTS_DIR"
+
+echo ""
+echo "Ubicación:"
+echo ""
+echo "1. ~/proyectos"
+echo "2. Elegir carpeta dentro de ~/proyectos"
+echo "3. Ruta personalizada"
+echo ""
+
+read -r -p "> " LOCATION_OPTION
+
+case "$LOCATION_OPTION" in
+    1)
+        BASE_DIR="$PROJECTS_DIR"
+        ;;
+
+    2)
+        echo ""
+        echo "Carpetas disponibles:"
+        echo ""
+
+        FOLDERS=()
+
+        while IFS= read -r FOLDER; do
+            FOLDERS+=("$FOLDER")
+        done < <(find "$PROJECTS_DIR" -maxdepth 1 -mindepth 1 -type d -printf '%f\n' | sort)
+
+        if [ "${#FOLDERS[@]}" -eq 0 ]; then
+            echo "❌ No hay carpetas disponibles dentro de ~/proyectos."
+            exit 1
+        fi
+
+        for i in "${!FOLDERS[@]}"; do
+            echo "$((i + 1)). ${FOLDERS[$i]}"
+        done
+
+        echo ""
+
+        read -r -p "> " FOLDER_OPTION
+
+        if ! [[ "$FOLDER_OPTION" =~ ^[0-9]+$ ]] || [ "$FOLDER_OPTION" -lt 1 ] || [ "$FOLDER_OPTION" -gt "${#FOLDERS[@]}" ]; then
+            echo "❌ Opción de carpeta no válida."
+            exit 1
+        fi
+
+        BASE_DIR="$PROJECTS_DIR/${FOLDERS[$((FOLDER_OPTION - 1))]}"
+        ;;
+
+    3)
+        echo ""
+        read -r -p "Ruta donde crear el proyecto: " BASE_DIR
+
+        BASE_DIR="${BASE_DIR/#\~/$HOME}"
+
+        if [ ! -d "$BASE_DIR" ]; then
+            echo "❌ La ruta no existe:"
+            echo "   $BASE_DIR"
+            exit 1
+        fi
+        ;;
+
+    *)
+        echo "❌ Opción de ubicación no válida."
+        exit 1
+        ;;
+esac
+
+PROJECT_DIR="$BASE_DIR/$PROJECT_NAME"
 
 if [ -d "$PROJECT_DIR" ]; then
     echo ""
