@@ -18,4 +18,5 @@ npx create-next-app@latest . \
     --app \
     --src-dir \
     --import-alias "@/*" \
-    --use-npm
+    --use-npm \
+    --disable-git

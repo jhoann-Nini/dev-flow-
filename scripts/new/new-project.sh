@@ -19,7 +19,8 @@ echo "1. Next.js"
 echo "2. Spring Boot"
 echo "3. Python"
 echo "4. C++"
-echo "5. Proyecto personalizado"
+echo "5. Full Stack (Next.js + Spring Boot)"
+echo "6. Personalizado"
 echo ""
 
 read -r -p "> " PROJECT_TYPE
@@ -40,6 +41,9 @@ case "$PROJECT_TYPE" in
         TYPE_NAME="C++"
         ;;
     5)
+        TYPE_NAME="Full Stack (Next.js + Spring Boot)"
+        ;;
+    6)
         TYPE_NAME="Personalizado"
         ;;
     *)
@@ -178,6 +182,10 @@ if [ "$PROJECT_TYPE" -eq 2 ]; then
         echo "❌ Error creando proyecto Spring Boot"
         exit 1
     fi
+fi
+
+if [ "$PROJECT_TYPE" -eq 5 ]; then
+    "$DEV_FLOW_DIR/scripts/new/create-fullstack.sh" "$PROJECT_DIR"
 fi
 
 if cp "$DEV_FLOW_DIR/templates/common/.gitignore" "$PROJECT_DIR/.gitignore"; then
