@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 echo "======================================"
 echo "        DEV-FLOW - PROJECT CHECK"
 echo "======================================"
@@ -43,11 +45,15 @@ echo "📂 ESTRUCTURA DEL PROYECTO"
 echo "--------------------------------------"
 
 PROJECT_TYPE="unknown"
+BACKEND_DIR=""
+FRONTEND_DIR=""
 
 # Proyecto Full Stack
 if [ -d "proyectos/frontend" ] && [ -d "proyectos/backend" ]; then
 
     PROJECT_TYPE="fullstack"
+    FRONTEND_DIR="proyectos/frontend"
+    BACKEND_DIR="proyectos/backend"
 
 # Proyecto Next.js o Node.js en la raíz
 elif [ -f "package.json" ]; then
@@ -60,8 +66,13 @@ elif [ -f "package.json" ]; then
 
 # Proyecto Spring Boot en la raíz
 elif [ -f "pom.xml" ]; then
-
     PROJECT_TYPE="springboot"
+    BACKEND_DIR="."
+
+# Proyecto Spring Boot dentro de una subcarpeta
+elif [ "$(find . -maxdepth 2 -type f -name "pom.xml" | wc -l)" -eq 1 ]; then
+    PROJECT_TYPE="springboot"
+    BACKEND_DIR="$(dirname "$(find . -maxdepth 2 -type f -name "pom.xml" -print -quit)")"
 
 # Proyecto Python
 elif [ -f "pyproject.toml" ] || [ -f "requirements.txt" ]; then
@@ -158,7 +169,7 @@ if [ "$PROJECT_TYPE" = "nextjs" ] || [ "$PROJECT_TYPE" = "nodejs" ]; then
     if [ -f "tsconfig.json" ]; then
         ok "tsconfig.json encontrado"
         
-        if "$HOME/proyectos/dev-flow-/scripts/check-typescript.sh"; then
+        if "$SCRIPT_DIR/check-typescript.sh" "$FRONTEND_DIR"; then
             ok "TypeScript: sin errores"
         else
             error "TypeScript: se encontraron errores"
@@ -178,7 +189,7 @@ if [ "$PROJECT_TYPE" = "nextjs" ] || [ "$PROJECT_TYPE" = "nodejs" ]; then
 
     if node -e "const p=require('./package.json'); process.exit(p.scripts?.lint ? 0 : 1)" 2>/dev/null; then
 
-        if "$HOME/proyectos/dev-flow-/scripts/check-eslint.sh"; then
+        if "$SCRIPT_DIR/check-eslint.sh"; then
             :
         else
             error "ESLint: se encontraron problemas"
@@ -199,7 +210,7 @@ if [ "$PROJECT_TYPE" = "nextjs" ] || [ "$PROJECT_TYPE" = "nodejs" ]; then
 
     if node -e "const p=require('./package.json'); process.exit(p.scripts?.test ? 0 : 1)" 2>/dev/null; then
 
-        if "$HOME/proyectos/dev-flow-/scripts/check-tests.sh"; then
+        if "$SCRIPT_DIR/check-tests.sh"; then
             :
         else
             error "Tests: se encontraron fallos"
@@ -220,7 +231,7 @@ if [ "$PROJECT_TYPE" = "nextjs" ] || [ "$PROJECT_TYPE" = "nodejs" ]; then
 
     if node -e "const p=require('./package.json'); process.exit(p.scripts?.build ? 0 : 1)" 2>/dev/null; then
 
-        if "$HOME/proyectos/dev-flow-/scripts/check-build.sh"; then
+        if "$SCRIPT_DIR/check-build.sh"; then
             :
         else
             error "Build: falló"
@@ -286,7 +297,7 @@ if [ "$PROJECT_TYPE" = "fullstack" ]; then
             (
                 cd "$FRONTEND_DIR" || exit 1
 
-                if "$HOME/proyectos/dev-flow-/scripts/check-typescript.sh"; then
+                if "$SCRIPT_DIR/check-typescript.sh"; then
                     :
                 else
                     exit 1
@@ -310,7 +321,7 @@ if [ "$PROJECT_TYPE" = "fullstack" ]; then
 
                 (
                     cd "$FRONTEND_DIR" || exit 1
-                    "$HOME/proyectos/dev-flow-/scripts/check-eslint.sh"
+                    "$SCRIPT_DIR/check-eslint.sh"
                 )
 
                 if [ "$?" -ne 0 ]; then
@@ -331,7 +342,7 @@ if [ "$PROJECT_TYPE" = "fullstack" ]; then
 
             (
                 cd "$FRONTEND_DIR" || exit 1
-                "$HOME/proyectos/dev-flow-/scripts/check-tests.sh"
+                "$SCRIPT_DIR/check-tests.sh"
             )
 
             if [ "$?" -ne 0 ]; then
@@ -350,7 +361,7 @@ if [ "$PROJECT_TYPE" = "fullstack" ]; then
 
             (
                 cd "$FRONTEND_DIR" || exit 1
-                "$HOME/proyectos/dev-flow-/scripts/check-build.sh"
+                "$SCRIPT_DIR/check-build.sh"
             )
 
             if [ "$?" -ne 0 ]; then
@@ -371,12 +382,12 @@ fi
 # Backend Full Stack
 # --------------------------------------
 
-if [ "$PROJECT_TYPE" = "fullstack" ]; then
+if [ "$PROJECT_TYPE" = "fullstack" ] || [ "$PROJECT_TYPE" = "springboot" ]; then
 
     echo "☕ BACKEND"
     echo "--------------------------------------"
 
-    if "$HOME/proyectos/dev-flow-/scripts/check-backend.sh"; then
+    if "$SCRIPT_DIR/check-backend.sh" "$BACKEND_DIR"; then
         :
     else
         error "Backend: la verificación falló"
@@ -414,7 +425,7 @@ echo ""
 echo "🔌 PUERTOS"
 echo "--------------------------------------"
 
-"$HOME/proyectos/dev-flow-/scripts/check-ports.sh"
+"$SCRIPT_DIR/check-ports.sh"
 PORT_WARNINGS=$?
 
 if [ "$PORT_WARNINGS" -gt 0 ]; then

@@ -1,5 +1,8 @@
 #!/bin/bash
-DEV_FLOW_DIR="$HOME/proyectos/dev-flow-"
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DEV_FLOW_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
 
 PROJECT_DIR="$1"
 

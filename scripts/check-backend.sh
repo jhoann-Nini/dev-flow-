@@ -5,7 +5,7 @@ echo "       DEV-FLOW - BACKEND CHECK"
 echo "======================================"
 echo ""
 
-BACKEND_DIR="proyectos/backend"
+BACKEND_DIR="${1:-proyectos/backend}"
 
 # Verificar directorio
 if [ ! -d "$BACKEND_DIR" ]; then
@@ -28,9 +28,18 @@ fi
 # Verificar Maven Wrapper
 if [ -f "$BACKEND_DIR/mvnw" ]; then
     echo "✅ Backend: Maven Wrapper encontrado"
+    MAVEN_CMD="./mvnw"
 else
-    echo "❌ Backend: mvnw no encontrado"
-    exit 1
+    echo "⚠️  Backend: Maven Wrapper no encontrado"
+    echo "   └─ Se utilizará Maven instalado en el sistema"
+
+    if command -v mvn >/dev/null 2>&1; then
+        echo "✅ Backend: Maven global encontrado"
+        MAVEN_CMD="mvn"
+    else
+        echo "❌ Backend: Maven no está instalado"
+        exit 1
+    fi
 fi
 
 # Verificar código fuente
@@ -54,7 +63,7 @@ echo ""
 
 cd "$BACKEND_DIR" || exit 1
 
-if ./mvnw test; then
+if $MAVEN_CMD test; then
     echo ""
     echo "✅ Backend: TESTS CORRECTOS"
 else

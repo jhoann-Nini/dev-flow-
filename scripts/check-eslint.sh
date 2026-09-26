@@ -1,16 +1,19 @@
 #!/bin/bash
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+FRONTEND_DIR="${1:-.}"
+
 echo "======================================"
 echo "        DEV-FLOW - ESLINT CHECK"
 echo "======================================"
 echo ""
 
-if [ ! -f "package.json" ]; then
+if [ ! -f "$FRONTEND_DIR/package.json" ]; then
     echo "⚠️  No se encontró package.json"
     exit 1
 fi
 
-if ! node -e "const p=require('./package.json'); process.exit(p.scripts?.lint ? 0 : 1)" 2>/dev/null; then
+if ! (cd "$FRONTEND_DIR" && node -e "const p=require('./package.json'); process.exit(p.scripts?.lint ? 0 : 1)" 2>/dev/null); then
     echo "⚠️  No existe script 'lint' en package.json"
     exit 1
 fi
@@ -20,7 +23,7 @@ echo ""
 
 LINT_OUTPUT=$(mktemp)
 
-npm run lint -- --no-warn-ignored > "$LINT_OUTPUT" 2>&1
+(cd "$FRONTEND_DIR" && npm run lint -- --no-warn-ignored) > "$LINT_OUTPUT" 2>&1
 LINT_EXIT=$?
 
 cat "$LINT_OUTPUT"
@@ -42,7 +45,7 @@ echo ""
 if [ "$LINT_ERRORS" -gt 0 ]; then
     echo "❌ ESLint: $LINT_ERRORS error(es)"
 
-    ERROR_ID=$("$HOME/proyectos/dev-flow-/scripts/error-map.sh" "eslint")
+    ERROR_ID=$("$SCRIPT_DIR/error-map.sh" "eslint")
 
     echo "   └─ Error relacionado: $ERROR_ID"
     echo "   └─ Solución: dev error eslint"

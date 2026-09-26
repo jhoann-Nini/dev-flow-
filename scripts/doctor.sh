@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 echo "======================================"
 echo "        DEV-FLOW - SYSTEM DOCTOR"
 echo "======================================"
@@ -64,7 +66,7 @@ if command -v docker &> /dev/null; then
     else
         echo "⚠️  Docker Engine: NO RESPONDE"
 
-        ERROR_ID=$("$HOME/proyectos/dev-flow-/scripts/error-map.sh" "docker")
+        ERROR_ID=$("$SCRIPT_DIR/error-map.sh" "docker")
 
         echo "   └─ Error relacionado: $ERROR_ID"
         echo "   └─ Solución: dev error docker"

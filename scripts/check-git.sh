@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 echo "======================================"
 echo "        DEV-FLOW - GIT CHECK"
 echo "======================================"
@@ -15,7 +17,7 @@ if gh auth status &> /dev/null; then
 else
     echo "⚠️  GitHub CLI: NO AUTENTICADO"
 
-    ERROR_ID=$("$HOME/proyectos/dev-flow-/scripts/error-map.sh" "git")
+    ERROR_ID=$("$SCRIPT_DIR/error-map.sh" "git")
 
     echo "   └─ Error relacionado: $ERROR_ID"
     echo "   └─ Solución: dev error git"

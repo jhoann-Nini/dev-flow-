@@ -1,7 +1,10 @@
 #!/bin/bash
 
-ERRORS_FILE="$HOME/proyectos/dev-flow-/docs/errors.md"
-MAP_SCRIPT="$HOME/proyectos/dev-flow-/scripts/error-map.sh"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DEV_FLOW_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+ERRORS_FILE="$DEV_FLOW_DIR/docs/errors.md"
+MAP_SCRIPT="$SCRIPT_DIR/error-map.sh"
 
 CATEGORY="$1"
 

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 echo "======================================"
 echo "       DEV-FLOW - PORT CHECK"
 echo "======================================"
@@ -23,7 +25,7 @@ for PORT in "${PORTS[@]}"; do
         if [ "$PORT" -eq 5432 ]; then
             echo "   └─ Posible servicio: PostgreSQL"
             echo "   └─ Diagnóstico: sudo systemctl status postgresql"
-            ERROR_ID=$("$HOME/proyectos/dev-flow-/scripts/error-map.sh" "ports")
+            ERROR_ID=$("$SCRIPT_DIR/error-map.sh" "ports")
             echo "   └─ Error relacionado: $ERROR_ID"
             echo "   └─ Solución: dev error ports"
         fi
