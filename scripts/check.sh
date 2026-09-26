@@ -36,27 +36,71 @@ echo "Directorio: $(pwd)"
 echo ""
 
 # --------------------------------------
-# Detectar tipo de proyecto
+# Detectar estructura del proyecto
 # --------------------------------------
+
+echo "📂 ESTRUCTURA DEL PROYECTO"
+echo "--------------------------------------"
 
 PROJECT_TYPE="unknown"
 
-if [ -f "package.json" ]; then
+# Proyecto Full Stack
+if [ -d "proyectos/frontend" ] && [ -d "proyectos/backend" ]; then
+
+    PROJECT_TYPE="fullstack"
+
+# Proyecto Next.js o Node.js en la raíz
+elif [ -f "package.json" ]; then
+
     if grep -q '"next"' package.json 2>/dev/null; then
         PROJECT_TYPE="nextjs"
     else
         PROJECT_TYPE="nodejs"
     fi
 
+# Proyecto Spring Boot en la raíz
 elif [ -f "pom.xml" ]; then
+
     PROJECT_TYPE="springboot"
 
+# Proyecto Python
 elif [ -f "pyproject.toml" ] || [ -f "requirements.txt" ]; then
     PROJECT_TYPE="python"
 
+# Proyecto C++
 elif [ -f "CMakeLists.txt" ]; then
     PROJECT_TYPE="cpp"
+
 fi
+
+case "$PROJECT_TYPE" in
+
+    fullstack)
+        ok "Proyecto Full Stack detectado"
+        echo "   ├─ docs"
+        echo "   ├─ frontend → Next.js"
+        echo "   └─ backend  → Spring Boot"
+        ;;
+
+    nextjs)
+        ok "Proyecto Next.js detectado"
+        ;;
+
+    nodejs)
+        ok "Proyecto Node.js detectado"
+        ;;
+
+    springboot)
+        ok "Proyecto Spring Boot detectado"
+        ;;
+
+    *)
+        warning "No se pudo identificar la estructura del proyecto"
+        ;;
+
+esac
+
+echo ""
 
 echo "🔍 TIPO DE PROYECTO"
 echo "--------------------------------------"
@@ -184,6 +228,158 @@ if [ "$PROJECT_TYPE" = "nextjs" ] || [ "$PROJECT_TYPE" = "nodejs" ]; then
 
     else
         warning "No existe script 'build' en package.json"
+    fi
+
+    echo ""
+
+fi
+
+# --------------------------------------
+# Frontend Full Stack
+# --------------------------------------
+
+if [ "$PROJECT_TYPE" = "fullstack" ]; then
+
+    echo "⚛️ FRONTEND"
+    echo "--------------------------------------"
+
+    FRONTEND_DIR="proyectos/frontend"
+
+    if [ ! -d "$FRONTEND_DIR" ]; then
+        error "No existe el directorio frontend"
+    else
+
+        # ------------------------------
+        # Dependencias
+        # ------------------------------
+
+        if [ -f "$FRONTEND_DIR/package.json" ]; then
+            ok "Frontend: package.json encontrado"
+        else
+            error "Frontend: package.json no encontrado"
+        fi
+
+        if [ -d "$FRONTEND_DIR/node_modules" ]; then
+            ok "Frontend: node_modules encontrado"
+        else
+            warning "Frontend: node_modules no encontrado"
+            echo "   └─ Ejecuta: cd $FRONTEND_DIR && npm install"
+        fi
+
+        # ------------------------------
+        # Variables de entorno
+        # ------------------------------
+
+        if [ -f "$FRONTEND_DIR/.env.local" ]; then
+            ok "Frontend: .env.local encontrado"
+        elif [ -f "$FRONTEND_DIR/.env" ]; then
+            warning "Frontend: .env encontrado, pero no existe .env.local"
+        else
+            warning "Frontend: no se encontró archivo .env"
+        fi
+
+        # ------------------------------
+        # TypeScript
+        # ------------------------------
+
+        if [ -f "$FRONTEND_DIR/tsconfig.json" ]; then
+            (
+                cd "$FRONTEND_DIR" || exit 1
+
+                if "$HOME/proyectos/dev-flow-/scripts/check-typescript.sh"; then
+                    :
+                else
+                    exit 1
+                fi
+            )
+
+            if [ "$?" -ne 0 ]; then
+                error "Frontend: TypeScript tiene errores"
+            fi
+        else
+            warning "Frontend: tsconfig.json no encontrado"
+        fi
+
+        # ------------------------------
+        # ESLint
+        # ------------------------------
+
+        if [ -f "$FRONTEND_DIR/package.json" ]; then
+
+            if node -e "const p=require('./$FRONTEND_DIR/package.json'); process.exit(p.scripts?.lint ? 0 : 1)" 2>/dev/null; then
+
+                (
+                    cd "$FRONTEND_DIR" || exit 1
+                    "$HOME/proyectos/dev-flow-/scripts/check-eslint.sh"
+                )
+
+                if [ "$?" -ne 0 ]; then
+                    error "Frontend: ESLint encontró problemas"
+                fi
+
+            else
+                warning "Frontend: no existe script 'lint'"
+            fi
+
+        fi
+
+        # ------------------------------
+        # Tests
+        # ------------------------------
+
+        if node -e "const p=require('./$FRONTEND_DIR/package.json'); process.exit(p.scripts?.test ? 0 : 1)" 2>/dev/null; then
+
+            (
+                cd "$FRONTEND_DIR" || exit 1
+                "$HOME/proyectos/dev-flow-/scripts/check-tests.sh"
+            )
+
+            if [ "$?" -ne 0 ]; then
+                error "Frontend: tests fallaron"
+            fi
+
+        else
+            echo "ℹ️  Frontend: no existe script 'test'"
+        fi
+
+        # ------------------------------
+        # Build
+        # ------------------------------
+
+        if node -e "const p=require('./$FRONTEND_DIR/package.json'); process.exit(p.scripts?.build ? 0 : 1)" 2>/dev/null; then
+
+            (
+                cd "$FRONTEND_DIR" || exit 1
+                "$HOME/proyectos/dev-flow-/scripts/check-build.sh"
+            )
+
+            if [ "$?" -ne 0 ]; then
+                error "Frontend: build falló"
+            fi
+
+        else
+            warning "Frontend: no existe script 'build'"
+        fi
+
+    fi
+
+    echo ""
+
+fi
+
+# --------------------------------------
+# Backend Full Stack
+# --------------------------------------
+
+if [ "$PROJECT_TYPE" = "fullstack" ]; then
+
+    echo "☕ BACKEND"
+    echo "--------------------------------------"
+
+    if "$HOME/proyectos/dev-flow-/scripts/check-backend.sh"; then
+        :
+    else
+        error "Backend: la verificación falló"
     fi
 
     echo ""
